@@ -1,0 +1,13 @@
+=================
+Comments
+=================
+#asdasdasdasd
+1;
+---
+
+(source_file
+  (comment)
+  (expression_statement
+    (integer)
+    (semicolon)))
+

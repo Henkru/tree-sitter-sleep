@@ -1,0 +1,23 @@
+{
+    "name": "tree-sitter-sleep",
+    "version": "1.0.0",
+    "description": "",
+    "main": "bindings/node",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "tree-sitter": [
+        {
+            "scope": "source.sleep",
+            "file-types": [
+                "sl",
+                "cna"
+            ]
+        }
+    ],
+    "dependencies": {
+        "nan": "^2.17.0"
+    }
+}

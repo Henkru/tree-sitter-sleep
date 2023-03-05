@@ -1,0 +1,357 @@
+===========================
+Block Statement
+===========================
+{
+
+}
+
+---
+(source_file)
+
+===========================
+If Statement
+===========================
+if (1 == 1 && 1) {
+
+}
+
+---
+(source_file
+  (if_statement
+    (parenthesized_expression
+      (binary_expression
+        (binary_expression
+          (integer)
+          (integer))
+        (integer)))))
+
+===========================
+Else Statement
+===========================
+if (1 == 1 && 1) {
+
+}
+else {
+
+}
+
+---
+(source_file
+  (if_statement
+    (parenthesized_expression
+      (binary_expression
+        (binary_expression
+          (integer)
+          (integer))
+        (integer)))))
+
+===========================
+ElseIf Statement
+===========================
+if (-isnumber 3) {
+
+}
+else if (f(1, 2)) {
+
+}
+else {
+
+}
+
+---
+(source_file
+  (if_statement
+    (parenthesized_expression
+      (unary_expression
+        (unary_operator)
+        (integer)))
+    (if_statement
+      (parenthesized_expression
+        (call_expression
+          (identifier)
+          (argument_list
+            (integer)
+            (integer)))))))
+
+
+===========================
+While Loop
+===========================
+
+while ($total > 0)
+{
+    $total++;
+}
+
+---
+(source_file
+  (while_statement
+    (parenthesized_expression
+      (binary_expression
+        (variable)
+        (integer)))
+    (expression_statement
+      (update_expression
+        (variable))
+      (semicolon))))
+
+===========================
+Assignment While Loop
+===========================
+
+while $read (readln($handle))
+{
+}
+
+---
+(source_file
+  (while_statement
+    (variable)
+    (parenthesized_expression
+      (call_expression
+        (identifier)
+        (argument_list
+          (variable))))))
+
+===========================
+For Loop
+===========================
+
+for ($total = 99; $total > 0; $total--, $beer = "$total bottle")
+{
+}
+for (; $total > 0;)
+{
+}
+
+---
+(source_file
+  (for_statement
+    (assignment_expression
+      (variable)
+      (integer))
+    (semicolon)
+    (binary_expression
+      (variable)
+      (integer))
+    (semicolon)
+    (comma_expression
+      (update_expression
+        (variable))
+      (assignment_expression
+        (variable)
+        (string_double))))
+  (for_statement
+    (semicolon)
+    (binary_expression
+      (variable)
+      (integer))
+    (semicolon)))
+
+===========================
+ForEach Loop
+===========================
+
+foreach $key => $value (%data)
+{
+}
+
+---
+(source_file
+  (foreach_statement
+    (variable)
+    (variable)
+    (parenthesized_expression
+      (hash_variable))))
+
+===========================
+Loop Control
+===========================
+
+foreach $key => $value (%data)
+{
+    break;
+    continue;
+}
+
+---
+(source_file
+  (foreach_statement
+    (variable)
+    (variable)
+    (parenthesized_expression
+      (hash_variable))
+    (break_statement
+      (semicolon))
+    (continue_statement
+      (semicolon))))
+
+===========================
+Throw
+===========================
+
+{
+    throw "&multipyBy3( $+ $1 $+ ) requires a number!";
+}
+
+---
+(source_file
+  (throw_statement
+    (string_double)
+    (semicolon)))
+
+===========================
+TryCatch
+===========================
+
+try
+{
+   $handle = openf("doesNotExist");
+   throw checkError($error);
+
+   println("file opened!");
+}
+catch $exception
+{
+   warn("error: $exception");
+}
+
+---
+(source_file
+  (try_statement
+    (expression_statement
+      (assignment_expression
+        (variable)
+        (call_expression
+          (identifier)
+          (argument_list
+            (string_double))))
+      (semicolon))
+    (throw_statement
+      (call_expression
+        (identifier)
+        (argument_list
+          (variable)))
+      (semicolon))
+    (expression_statement
+      (call_expression
+        (identifier)
+        (argument_list
+          (string_double)))
+      (semicolon))
+    (variable)
+    (expression_statement
+      (call_expression
+        (identifier)
+        (argument_list
+          (string_double)))
+      (semicolon))))
+
+===========================
+Assert
+===========================
+
+assert $1 >= 0 : "invalid arg for fact: $1";
+assert $1 >= 0;
+
+---
+(source_file
+  (assert_statement
+    (binary_expression
+      (variable)
+      (integer))
+    (string_double)
+    (semicolon))
+  (assert_statement
+    (binary_expression
+      (variable)
+      (integer))
+    (semicolon)))
+
+===========================
+Function Definition
+===========================
+
+sub foo {
+
+}
+
+---
+(source_file
+  (function_definition
+    (identifier)))
+
+===========================
+Pass By Name
+===========================
+
+{
+    bar(\$explorer, \$year);
+}
+
+---
+(source_file
+  (expression_statement
+    (call_expression
+      (identifier)
+      (argument_list
+        (variable)
+        (variable)))
+    (semicolon)))
+
+===========================
+Inline Definition
+===========================
+
+inline foo {
+
+}
+
+---
+(source_file
+  (inline_definition
+    (identifier)))
+
+===========================
+Invoke Closure
+===========================
+
+{
+    [&foo asd: 1, 2];
+    [{println("test");}];
+}
+
+---
+(source_file
+  (expression_statement
+    (closure_invoke_expression
+      (function_variable)
+      (identifier)
+      (comma_expression
+        (integer)
+        (integer)))
+    (semicolon))
+  (expression_statement
+    (closure_invoke_expression
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (string_double)))
+        (semicolon)))
+    (semicolon)))
+
+===========================
+Java Import
+===========================
+
+import java.util.LinkedList;
+import org.jdom.*        from: jdom.jar;
+
+---
+(source_file
+  (import_statement
+    (semicolon))
+  (import_statement
+    (semicolon)))
+

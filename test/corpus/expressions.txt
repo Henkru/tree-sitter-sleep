@@ -1,0 +1,738 @@
+===========================
+Scalars
+===========================
+{
+    123;
+    0xaa;
+    0777;
+    123L;
+    0xaaL;
+    0777L;
+    123.123;
+    1.0;
+}
+
+---
+(source_file
+  (expression_statement
+    (integer)
+    (semicolon))
+  (expression_statement
+    (integer)
+    (semicolon))
+  (expression_statement
+    (integer)
+    (semicolon))
+  (expression_statement
+    (long)
+    (semicolon))
+  (expression_statement
+    (long)
+    (semicolon))
+  (expression_statement
+    (long)
+    (semicolon))
+  (expression_statement
+    (double)
+    (semicolon))
+  (expression_statement
+    (double)
+    (semicolon)))
+
+===========================
+Strings
+===========================
+{
+    "hello world";
+    'hello world';
+}
+
+---
+(source_file
+  (expression_statement
+    (string_double)
+    (semicolon))
+  (expression_statement
+    (string_single)
+    (semicolon)))
+
+===========================
+Binary Expressions
+===========================
+{
+    1 + 1;
+    1 - 1;
+    1 * 1;
+    1 / 1;
+    1 ** 1;
+    1 + 1 * 2;
+    (1 + 1) * 2;
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (binary_expression
+        (integer)
+        (integer)))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (parenthesized_expression
+        (binary_expression
+          (integer)
+          (integer)))
+      (integer))
+    (semicolon)))
+
+===========================
+Array Initializer
+===========================
+{
+    @("a", "b", "c", "d", (1 + 1));
+}
+
+---
+(source_file
+  (expression_statement
+    (array_expression
+      (string_double)
+      (string_double)
+      (string_double)
+      (string_double)
+      (parenthesized_expression
+        (binary_expression
+          (integer)
+          (integer))))
+    (semicolon)))
+
+===========================
+Key Value Pair
+===========================
+
+{
+    a => 'apple';
+    foo => (1 + (3 * 4));
+}
+
+---
+(source_file
+  (expression_statement
+    (key_value_expression
+      (identifier)
+      (string_single))
+    (semicolon))
+  (expression_statement
+    (key_value_expression
+      (identifier)
+      (parenthesized_expression
+        (binary_expression
+          (integer)
+          (parenthesized_expression
+            (binary_expression
+              (integer)
+              (integer))))))
+    (semicolon)))
+
+===========================
+Hash Initializer
+===========================
+
+{
+    %(a => "apple", b => "boy", c => 3 * (9 % 7));
+}
+
+---
+(source_file
+  (expression_statement
+    (hash_expression
+      (key_value_expression
+        (identifier)
+        (string_double))
+      (key_value_expression
+        (identifier)
+        (string_double))
+      (key_value_expression
+        (identifier)
+        (binary_expression
+          (integer)
+          (parenthesized_expression
+            (binary_expression
+              (integer)
+              (integer))))))
+    (semicolon)))
+
+===========================
+Function Call
+===========================
+{
+    f();
+    f(1, 2, 3, f(1));
+    f(foo => "bar");
+}
+
+---
+    (source_file
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list))
+        (semicolon))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (integer)
+            (integer)
+            (integer)
+            (call_expression
+              (identifier)
+              (argument_list
+                (integer)))))
+        (semicolon))
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (key_value_expression
+              (identifier)
+              (string_double))))
+        (semicolon)))
+
+===========================
+Unary Operator
+===========================
+
+{
+    -isarray @(1, 2, 3);
+    !-isarray @(1, 2, 3);
+    !f();
+    -5;
+}
+
+---
+(source_file
+  (expression_statement
+    (unary_expression
+      (unary_operator)
+      (array_expression
+        (integer)
+        (integer)
+        (integer)))
+    (semicolon))
+  (expression_statement
+    (unary_expression
+      (unary_operator)
+      (unary_expression
+        (unary_operator)
+        (array_expression
+          (integer)
+          (integer)
+          (integer))))
+    (semicolon))
+  (expression_statement
+    (unary_expression
+      (unary_operator)
+      (call_expression
+        (identifier)
+        (argument_list)))
+    (semicolon))
+  (expression_statement
+    (unary_expression
+      (unary_operator)
+      (integer))
+    (semicolon)))
+
+
+===========================
+Variables
+===========================
+
+{
+    $var;
+    @var;
+    %var;
+}
+
+---
+(source_file
+  (expression_statement
+    (variable)
+    (semicolon))
+  (expression_statement
+    (array_variable)
+    (semicolon))
+  (expression_statement
+    (hash_variable)
+    (semicolon)))
+
+===========================
+Subscript
+===========================
+
+{
+    f()[123];
+    @var[123];
+    %var[$a];
+}
+
+---
+(source_file
+  (expression_statement
+    (subscript_expression
+      (call_expression
+        (identifier)
+        (argument_list))
+      (integer))
+    (semicolon))
+  (expression_statement
+    (subscript_expression
+      (array_variable)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (subscript_expression
+      (hash_variable)
+      (variable))
+    (semicolon)))
+
+===========================
+Update Expression
+===========================
+
+{
+    $a++;
+    $a--;
+}
+
+---
+(source_file
+  (expression_statement
+    (update_expression
+      (variable))
+    (semicolon))
+  (expression_statement
+    (update_expression
+      (variable))
+    (semicolon)))
+
+===========================
+Assignment
+===========================
+
+{
+    $a = 123;
+    @a = @(1, 2);
+    @a[1] = 3;
+    @a[f()] = 3;
+    $x += 3;
+}
+
+---
+(source_file
+  (expression_statement
+    (assignment_expression
+      (variable)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (assignment_expression
+      (array_variable)
+      (array_expression
+        (integer)
+        (integer)))
+    (semicolon))
+  (expression_statement
+    (assignment_expression
+      (subscript_expression
+        (array_variable)
+        (integer))
+      (integer))
+    (semicolon))
+  (expression_statement
+    (assignment_expression
+      (subscript_expression
+        (array_variable)
+        (call_expression
+          (identifier)
+          (argument_list)))
+      (integer))
+    (semicolon))
+  (expression_statement
+    (assignment_expression
+      (variable)
+      (integer))
+    (semicolon)))
+
+===========================
+Tuple Assignment
+===========================
+
+{
+    ($x, $y, $z) = @array;
+    (@x[f()], $y + 1, f()) = @array;
+}
+
+---
+(source_file
+  (expression_statement
+    (assignment_expression
+      (tuple
+        (variable)
+        (variable)
+        (variable))
+      (array_variable))
+    (semicolon))
+  (expression_statement
+    (assignment_expression
+      (tuple
+        (subscript_expression
+          (array_variable)
+          (call_expression
+            (identifier)
+            (argument_list)))
+        (binary_expression
+          (variable)
+          (integer))
+        (call_expression
+          (identifier)
+          (argument_list)))
+      (array_variable))
+    (semicolon)))
+
+
+===========================
+String Operations
+===========================
+
+{
+    "hello " . "world" . "!";
+    "a" x 3;
+    "hello" cmp "hello";
+    "hello" iswm "hello";
+    "hello" hasmatch "hello";
+    "hello" ismatch "hello";
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (binary_expression
+        (string_double)
+        (string_double))
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon)))
+
+===========================
+Bit Operations
+===========================
+
+{
+    $a | 1;
+    $a ^ 1;
+    $a & $x;
+    $a << $x;
+    $a >> $x;
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (variable)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon)))
+
+===========================
+Number Comparasion
+===========================
+
+{
+    1 == 1;
+    1 != 1;
+    1 > 1;
+    1 < 1;
+    1 >= 1;
+    1 <= 1;
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (integer)
+      (integer))
+    (semicolon)))
+
+===========================
+String Comparasion
+===========================
+
+{
+    "foo" eq "bar";
+    "foo" ne "bar";
+    "foo" lt "bar";
+    "foo" gt "bar";
+    "foo" isin "bar";
+    "foo" iswm "bar";
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (string_double)
+      (string_double))
+    (semicolon)))
+
+===========================
+Reference Comparasion
+===========================
+
+{
+    $a =~ $x;
+    $a is $x;
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon)))
+
+===========================
+Logical Comparasion
+===========================
+
+{
+    $a && $x;
+    $a || $x;
+}
+
+---
+(source_file
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon))
+  (expression_statement
+    (binary_expression
+      (variable)
+      (variable))
+    (semicolon)))
+
+===========================
+Null
+===========================
+
+{
+    $a = $null;
+}
+
+---
+(source_file
+  (expression_statement
+    (assignment_expression
+      (variable)
+      (null))
+    (semicolon)))
+
+===========================
+Closure Assignment
+===========================
+
+{
+    $closure = {
+       println("My name is: $1");
+    };
+}
+
+---
+(source_file
+  (expression_statement
+    (assignment_expression
+      (variable)
+      (expression_statement
+        (call_expression
+          (identifier)
+          (argument_list
+            (string_double)))
+        (semicolon)))
+    (semicolon)))
+
+===========================
+Closure Index Operator
+===========================
+
+{
+    $closure['$x'] = "test!";
+}
+
+---
+(source_file
+  (expression_statement
+    (assignment_expression
+      (subscript_expression
+        (variable)
+        (string_single))
+      (string_double))
+    (semicolon)))
+
+===========================
+Java New
+===========================
+
+{
+    $builder  = [new SAXBuilder];
+    $output   = [new XMLOutputter: [Format getPrettyFormat]];
+}
+
+---
+(source_file
+  (expression_statement
+    (assignment_expression
+      (variable)
+      (closure_invoke_expression
+        (identifier)))
+    (semicolon))
+  (expression_statement
+    (assignment_expression
+      (variable)
+      (closure_invoke_expression
+        (identifier)
+        (closure_invoke_expression
+          (identifier)
+          (identifier))))
+    (semicolon)))
+
